@@ -1,0 +1,9 @@
+---
+- name: create main config
+  template:
+    src: sphinx_exporter.cfg.j2
+    dest: "{{ sphinx_exporter_dirs.config_dir }}/{{ sphinx_exporter_config_file }}"
+    owner: root
+    group: "{{ sphinx_exporter_user_name }}"
+    mode: 0640
+  notify: restart sphinx_exporter service

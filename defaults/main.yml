@@ -1,0 +1,15 @@
+---
+sphinx_exporter_version: "0.0.2"
+sphinx_exporter_targz_url: "https://github.com/iamseth/sphinx_exporter/releases/download/{{ sphinx_exporter_version }}/sphinx_exporter.linux-amd64"
+
+sphinx_exporter_setup: full
+sphinx_exporter_config_file: sphinx_exporter.cfg
+sphinx_exporter_user_name: sphinx_exporter
+sphinx_exporter_service_name: sphinx_exporter
+sphinx_exporter_systemd_unit: "/etc/systemd/system/{{ sphinx_exporter_service_name }}.service"
+
+sphinx_exporter_dirs:
+  binary_dir: /usr/local/bin
+  config_dir: /usr/local/etc/sphinx_exporter
+
+sphinx_exporter_params: "-sphinx.host localhost -sphinx.port 9312"

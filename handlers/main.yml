@@ -1,0 +1,9 @@
+---
+- name: reload sphinx_exporter unit
+  systemd:
+    daemon_reload: true
+
+- name: restart sphinx_exporter service
+  systemd:
+    name: "{{ sphinx_exporter_service_name }}"
+    state: restarted

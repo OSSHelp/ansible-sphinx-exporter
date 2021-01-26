@@ -1,0 +1,49 @@
+---
+- name: check if binary file exists
+  stat:
+    path: "{{ sphinx_exporter_dirs.binary_dir }}/sphinx_exporter"
+  register: binary_file
+
+- name: download binary
+  get_url:
+    url: "{{ sphinx_exporter_targz_url }}"
+    dest: "{{ sphinx_exporter_dirs.binary_dir }}/{{ sphinx_exporter_service_name }}"
+    mode: 0755
+  when: not binary_file.stat.exists
+
+- name: create user
+  user:
+    name: "{{ sphinx_exporter_user_name }}"
+    home: "/nonexistent"
+    create_home: no
+    shell: "/bin/false"
+    system: yes
+
+- name: create systemd unit
+  template:
+    src: sphinx_exporter.service.j2
+    dest: "{{ sphinx_exporter_systemd_unit }}"
+  notify:
+    - reload sphinx_exporter unit
+    - restart sphinx_exporter service
+
+- name: create config dir
+  file:
+    path: "{{ sphinx_exporter_dirs.config_dir }}"
+    state: directory
+
+- name: create main config placeholder if doesn't exist
+  copy:
+    content: ""
+    dest: "{{ sphinx_exporter_dirs.config_dir }}/{{ sphinx_exporter_config_file }}"
+    force: no
+    owner: root
+    group: "{{ sphinx_exporter_user_name }}"
+    mode: 0640
+
+- meta: flush_handlers
+
+- name: enable service
+  systemd:
+    name: "{{ sphinx_exporter_service_name }}"
+    enabled: true

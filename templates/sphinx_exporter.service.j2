@@ -1,0 +1,21 @@
+[Unit]
+Description=Sphinx Exporter
+After=sphinxsearch.service
+
+[Service]
+Type=forking
+User={{ sphinx_exporter_user_name }}
+Group={{ sphinx_exporter_user_name }}
+RuntimeDirectory=sphinx_exporter
+RuntimeDirectoryMode=0755
+EnvironmentFile={{ sphinx_exporter_dirs.config_dir }}/{{ sphinx_exporter_config_file }}
+PIDFile=/var/run/sphinx_exporter/pid
+ExecStart=/sbin/start-stop-daemon -Sbmp /var/run/sphinx_exporter/pid -x {{ sphinx_exporter_dirs.binary_dir }}/sphinx_exporter -- $OPTIONS
+Restart=always
+
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=sphinx_exporter
+
+[Install]
+WantedBy=multi-user.target

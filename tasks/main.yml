@@ -1,0 +1,8 @@
+---
+- name: install
+  include_tasks: install.yml
+  when: sphinx_exporter_setup == "full" or sphinx_exporter_setup == "install"
+
+- name: configure
+  import_tasks: configure.yml
+  when: sphinx_exporter_setup == "full" or sphinx_exporter_setup == "configure"
